@@ -90,7 +90,9 @@ for (let i = 0; i < 500; i++)
     as.push(new TimeAllocation(i + 1, i + 100000, new Date(), Math.random()));
 }
 
+console.time('Runtime');
 console.log(getInvalidAllocations(rs, as).length + ' invalid objects');
+console.timeEnd('Runtime')
 
 /** Result 
 
