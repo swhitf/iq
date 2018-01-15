@@ -1,58 +1,31 @@
 /** Declarations **/
 
-export class Task
+export class Item
 {
-    public id:number;
+    public id:string;
     public label:string;
 
-    constructor(id:number, label:string)
+    constructor(id:string, label:string)
     {
         this.id = id;
         this.label = label;
     }
 }
 
-export class Resource
-{
-    public id:number;
-    public label:string;
-    
-    constructor(id:number, label:string)
-    {
-        this.id = id;
-        this.label = label;
-    }
-}
-
-export class TimeAllocation
-{
-    public taskId:number;
-    public resourceId:number;
-    public date:Date;
-    public hours:number;
-    
-    constructor(taskId:number, resourceId:number, date:Date, hours:number)
-    {
-        this.taskId = taskId;
-        this.resourceId = resourceId;
-        this.date = date;
-        this.hours = hours;
-    }
-}
 
 /** Question **/
 
-export function getInvalidAllocations(globalResources:Resource[], allocations:TimeAllocation[]):TimeAllocation[]
+export function findItemsInBothLists(listA:Item[], listB:Item[]):Item[]
 {
-    let results:TimeAllocation[] = [];
+    let results:Item[] = [];
 
-    for (let al of allocations)
+    for (let a of listA)
     {
         let isValid = false;
 
-        for (let rs of globalResources)
+        for (let b of listB)
         {
-            if (al.resourceId == rs.id)
+            if (a.id == b.id)
             {
                 isValid = true;
                 break;
@@ -61,7 +34,7 @@ export function getInvalidAllocations(globalResources:Resource[], allocations:Ti
 
         if (!isValid) 
         {
-            results.push(al);
+            results.push(a);
         }
     }
 
@@ -70,33 +43,28 @@ export function getInvalidAllocations(globalResources:Resource[], allocations:Ti
 
 /** Test **/
 
-let ts:Task[] = [];
-let rs:Resource[] = [];
-let as:TimeAllocation[] = [];
+let listA:Item[] = [];
+let listB:Item[] = [];
 
-for (let i = 0; i < 100000; i++)
+for (let i = 0; i < 10000; i++)
 {
-    ts.push(new Task(i + 1, `Task ${i + 1}`));
-    rs.push(new Resource(i + 1, `Resource ${i + 1}`));
+    listA.push(new Item('item' + i, 'Item #' + (i + 1)));
 }
 
-for (let i = 0; i < 1000; i++)
+for (let i = 1000; i < 10100; i++)
 {
-    as.push(new TimeAllocation(i + 1, i + 1, new Date(), Math.random()));
-}
-
-for (let i = 0; i < 500; i++)
-{
-    as.push(new TimeAllocation(i + 1, i + 100000, new Date(), Math.random()));
+    listB.push(new Item('item' + i, 'Item #' + (i + 1)));
 }
 
 console.time('Runtime');
-console.log(getInvalidAllocations(rs, as).length + ' invalid objects');
+console.log(findItemsInBothLists(listA, listB).length + ' common objects');
 console.timeEnd('Runtime')
 
 /** Result 
 
-PS C:\Home\iq> tsc | node .\three.js
-499 invalid objects
+C:\Home\iq>node three.js
+1000 common objects
+Runtime: 717.182ms
+
 
 **/
